@@ -18,7 +18,7 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'amarna.db');
     return await openDatabase(
       path,
-      version: 3, // Aumentamos la versión de la base de datos
+      version: 4, // Aumentamos la versión de la base de datos
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
     );
@@ -33,6 +33,7 @@ class DatabaseHelper {
           password TEXT NOT NULL,
           role TEXT NOT NULL,
           cv_path TEXT,
+          cv_content TEXT,
           name TEXT,
           studies TEXT,
           experience TEXT
@@ -93,6 +94,10 @@ class DatabaseHelper {
             FOREIGN KEY (job_offer_id) REFERENCES job_offers(id) ON DELETE CASCADE
         )
         ''');
+    } // MISSING BRACE FIXED HERE
+    if (oldVersion < 4) {
+      // Si la versión antigua era menor que 4, añadimos la columna del contenido del CV
+      await db.execute("ALTER TABLE users ADD COLUMN cv_content TEXT");
     }
   }
 
@@ -127,11 +132,14 @@ class DatabaseHelper {
     return null;
   }
 
-  Future<int> updateUserCv(int userId, String cvPath) async {
+  Future<int> updateUserCv(int userId, String cvPath, String cvContent) async {
     final db = await database;
     return await db.update(
       'users',
-      {'cv_path': cvPath},
+      {
+        'cv_path': cvPath,
+        'cv_content': cvContent,
+      },
       where: 'id = ?',
       whereArgs: [userId],
     );

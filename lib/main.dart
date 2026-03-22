@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:amarnamovil/data/local/database_helper.dart';
-import 'package:amarnamovil/features/auth/screens/login_screen.dart';
+import 'package:amarnamovil/features/auth/presentation/screens/login_screen.dart';
 import 'package:amarnamovil/core/theme/app_theme.dart';
 
 void main() async {
@@ -33,9 +33,9 @@ Future<void> _insertInitialData() async {
       'requirements': 'Python, TensorFlow, PyTorch. Experiencia en procesamiento de lenguaje natural y visión por computador.',
       'location': 'Madrid',
     });
-    print("Ofertas de empleo iniciales insertadas.");
+    debugPrint("Ofertas de empleo iniciales insertadas.");
   } else {
-    print("La base de datos ya contiene ofertas de empleo.");
+    debugPrint("La base de datos ya contiene ofertas de empleo.");
   }
 }
 

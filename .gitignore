@@ -4,6 +4,8 @@
 *.pyc
 *.swp
 .DS_Store
+**/._*
+.DS_Store
 .atom/
 .build/
 .buildlog/
@@ -43,3 +45,20 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+/android/app/build/
+/android/app/tmp/
+/android/build/
+/android/tmp/
+**/build/
+**/tmp/
+
+# AI
+.agent/
+/context/
+.env
+**/.env
+
+# Python
+**/__pycache__/
+**/.venv/
+*.py[cod]

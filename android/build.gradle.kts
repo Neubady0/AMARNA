@@ -5,15 +5,22 @@ allprojects {
     }
 }
 
-val newBuildDir: Directory =
-    rootProject.layout.buildDirectory
-        .dir("../../build")
-        .get()
-rootProject.layout.buildDirectory.value(newBuildDir)
+
+// Movido a /tmp para evitar problemas con metadatos de macOS en discos externos
+val newBuildDir = File("/tmp/flutter_build_amarna")
+rootProject.buildDir = newBuildDir
 
 subprojects {
-    val newSubprojectBuildDir: Directory = newBuildDir.dir(project.name)
-    project.layout.buildDirectory.value(newSubprojectBuildDir)
+    project.buildDir = File(newBuildDir, project.name)
+
+    afterEvaluate {
+        if (project.plugins.hasPlugin("com.android.application") || project.plugins.hasPlugin("com.android.library")) {
+            val androidExtensions = project.extensions.getByName("android")
+            if (androidExtensions is com.android.build.gradle.BaseExtension) {
+                androidExtensions.aaptOptions.ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~:!._*"
+            }
+        }
+    }
 }
 subprojects {
     project.evaluationDependsOn(":app")
