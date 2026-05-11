@@ -4,7 +4,7 @@ publish_to: "none"
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.10.3
+  sdk: ^3.10.0
 
 dependencies:
   flutter:
@@ -27,6 +27,10 @@ dependencies:
   record: ^6.2.0
   path_provider: ^2.1.5
   read_pdf_text: ^0.3.1
+  aad_oauth: ^1.0.1
+  flutter_bloc: ^9.1.1
+  dio: ^5.9.2
+  pretty_dio_logger: ^1.4.0
 
 dev_dependencies:
   flutter_test:

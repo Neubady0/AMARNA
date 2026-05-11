@@ -6,16 +6,16 @@ plugins {
 
 android {
     namespace = "com.example.amarnamovil"
-    compileSdk = 36 // La versión correcta que requieren los plugins
+    compileSdk = 36 // Required by modern plugins (camera, sqflite, etc)
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
 
     defaultConfig {

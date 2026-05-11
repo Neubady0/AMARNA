@@ -1,3 +1,5 @@
+import java.io.File
+
 allprojects {
     repositories {
         google()
@@ -5,14 +7,14 @@ allprojects {
     }
 }
 
-
-// Movido a /tmp para evitar problemas con metadatos de macOS en discos externos
-val newBuildDir = File("/tmp/flutter_build_amarna")
+val newBuildDir = File(rootProject.projectDir, "../build").absoluteFile
 rootProject.buildDir = newBuildDir
 
 subprojects {
     project.buildDir = File(newBuildDir, project.name)
+}
 
+subprojects {
     afterEvaluate {
         if (project.plugins.hasPlugin("com.android.application") || project.plugins.hasPlugin("com.android.library")) {
             val androidExtensions = project.extensions.getByName("android")
@@ -22,6 +24,7 @@ subprojects {
         }
     }
 }
+
 subprojects {
     project.evaluationDependsOn(":app")
 }

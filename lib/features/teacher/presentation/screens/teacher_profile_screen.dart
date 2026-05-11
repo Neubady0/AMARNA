@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:amarnamovil/features/candidate/presentation/screens/edit_profile_screen.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:amarnamovil/features/profile/presentation/screens/edit_profile_screen.dart';
 import 'package:amarnamovil/core/theme/app_theme.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -61,7 +61,7 @@ class TeacherProfileScreen extends StatelessWidget {
                      Navigator.popUntil(context, (route) => route.isFirst);
                   },
                   icon: const Icon(Icons.logout, color: Colors.redAccent),
-                  label: const Text("Cerrar Sesión", style: TextStyle(color: Colors.redAccent)),
+                  label: const Text("Cerrar SesiÃ³n", style: TextStyle(color: Colors.redAccent)),
                    style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     side: BorderSide(color: Colors.redAccent.withValues(alpha: 0.5)),

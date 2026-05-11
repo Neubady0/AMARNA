@@ -18,7 +18,7 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'amarna.db');
     return await openDatabase(
       path,
-      version: 4, // Aumentamos la versión de la base de datos
+      version: 6, // Aumentamos la versión para añadir urls y ofertas de trabajo
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
     );
@@ -36,7 +36,10 @@ class DatabaseHelper {
           cv_content TEXT,
           name TEXT,
           studies TEXT,
-          experience TEXT
+          experience TEXT,
+          github_url TEXT,
+          portfolio_url TEXT,
+          job_offer_url TEXT
       )
       ''');
     // Tabla de ofertas de empleo
@@ -58,8 +61,18 @@ class DatabaseHelper {
           application_date TEXT NOT NULL,
           status TEXT NOT NULL,
           UNIQUE(user_id, job_offer_id),
-          FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-          FOREIGN KEY (job_offer_id) REFERENCES job_offers(id) ON DELETE CASCADE
+          FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+      )
+      ''');
+    // Tabla de logs de entrevistas
+    await db.execute('''
+      CREATE TABLE interview_logs(
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          user_id INTEGER NOT NULL,
+          interview_date TEXT NOT NULL,
+          messages_json TEXT NOT NULL,
+          stats_json TEXT NOT NULL,
+          FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
       )
       ''');
   }
@@ -98,6 +111,24 @@ class DatabaseHelper {
     if (oldVersion < 4) {
       // Si la versión antigua era menor que 4, añadimos la columna del contenido del CV
       await db.execute("ALTER TABLE users ADD COLUMN cv_content TEXT");
+    }
+    if (oldVersion < 5) {
+      // Tabla de logs de entrevistas
+      await db.execute('''
+        CREATE TABLE interview_logs(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            interview_date TEXT NOT NULL,
+            messages_json TEXT NOT NULL,
+            stats_json TEXT NOT NULL,
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        )
+        ''');
+    }
+    if (oldVersion < 6) {
+      await db.execute("ALTER TABLE users ADD COLUMN github_url TEXT");
+      await db.execute("ALTER TABLE users ADD COLUMN portfolio_url TEXT");
+      await db.execute("ALTER TABLE users ADD COLUMN job_offer_url TEXT");
     }
   }
 
@@ -179,5 +210,21 @@ class DatabaseHelper {
       whereArgs: [userId, jobOfferId],
     );
     return result.isNotEmpty;
+  }
+
+  // Métodos para Logs de Entrevistas
+  Future<int> saveInterviewLog(Map<String, dynamic> log) async {
+    final db = await database;
+    return await db.insert('interview_logs', log);
+  }
+
+  Future<List<Map<String, dynamic>>> getInterviewLogs(int userId) async {
+    final db = await database;
+    return await db.query(
+      'interview_logs',
+      where: 'user_id = ?',
+      whereArgs: [userId],
+      orderBy: 'id DESC',
+    );
   }
 }
