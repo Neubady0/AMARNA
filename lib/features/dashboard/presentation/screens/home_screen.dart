@@ -1,4 +1,4 @@
-﻿import 'dart:convert';
+import 'dart:convert';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -48,6 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _isLoading = false;
   bool _isRecording = false;
   bool _interviewStarted = false;
+  String _selectedMode = 'Amable';
 
   // Limits
   int _userTurns = 0;
@@ -101,9 +102,13 @@ class _HomeScreenState extends State<HomeScreen> {
       _interviewStarted = true;
     });
     // AI speaks first
+    String modeInstruction = _selectedMode == 'Amable' 
+        ? 'Actúa con un tono amable, empático, constructivo y comprensivo durante toda la entrevista. Ayuda al candidato a sentirse cómodo.' 
+        : 'Actúa con un tono agresivo, muy estricto, exigente, intimidante y pon bajo presión al candidato. Haz preguntas muy difíciles y sé crítico.';
+
     final prompt = _cvText != null && _cvText!.isNotEmpty
-        ? 'Analiza el CV del candidato y hazle la primera pregunta para comenzar una entrevista tÃ©cnica personalizada.'
-        : 'Soy un candidato sin CV disponible. Hazme la primera pregunta para comenzar una entrevista tÃ©cnica general de desarrollo de software.';
+        ? 'Analiza el CV del candidato y hazle la primera pregunta para comenzar una entrevista técnica personalizada. $modeInstruction'
+        : 'Soy un candidato sin CV disponible. Hazme la primera pregunta para comenzar una entrevista técnica general de desarrollo de software. $modeInstruction';
     await _sendToAI(prompt, hidden: true);
   }
 
@@ -167,7 +172,7 @@ class _HomeScreenState extends State<HomeScreen> {
     } catch (e) {
       setState(() => _messages.add(_Msg(
             _Role.system,
-            'Error de conexiÃ³n: ${e.toString().replaceFirst('Exception: ', '')}',
+            'Error de conexión: ${e.toString().replaceFirst('Exception: ', '')}',
             DateTime.now(),
           )));
     } finally {
@@ -289,7 +294,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Container(width: 6, height: 6, decoration: BoxDecoration(shape: BoxShape.circle, color: hasCv ? Colors.greenAccent : Colors.orange)),
                     const SizedBox(width: 6),
                     Text(
-                      hasCv ? 'CV cargado Â· listo para entrevistar' : 'Sin CV Â· modo general',
+                      hasCv ? 'CV cargado · Modo $_selectedMode' : 'Sin CV · Modo $_selectedMode',
                       style: GoogleFonts.lato(color: Colors.white54, fontSize: 11),
                     ),
                   ],
@@ -353,11 +358,14 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 12),
             Text(
               hasCv
-                  ? 'La IA analizarÃ¡ tu CV y te harÃ¡ 5 preguntas personalizadas.\nPulsa Iniciar cuando estÃ©s listo.'
-                  : 'No se detectÃ³ un CV. Puedes subir uno en JobMatch o comenzar en modo general.\nPulsa Iniciar cuando estÃ©s listo.',
+                  ? 'La IA analizará tu CV y te hará 5 preguntas personalizadas.\nSelecciona el modo y pulsa Iniciar.'
+                  : 'No se detectó un CV. Puedes subir uno en JobMatch o comenzar en modo general.\nSelecciona el modo y pulsa Iniciar.',
               style: GoogleFonts.lato(color: Colors.white54, fontSize: 14, height: 1.6),
               textAlign: TextAlign.center,
             ).animate().fadeIn(delay: 200.ms),
+            const SizedBox(height: 24),
+            // Mode selector
+            _buildModeSelector(),
             const SizedBox(height: 32),
             // Tips chip row
             Wrap(
@@ -367,9 +375,55 @@ class _HomeScreenState extends State<HomeScreen> {
               children: const [
                 _TipChip(icon: Icons.format_list_numbered, label: '5 preguntas'),
                 _TipChip(icon: Icons.mic_rounded, label: 'Voz o texto'),
-                _TipChip(icon: Icons.bar_chart_rounded, label: 'EstadÃ­sticas al final'),
+                _TipChip(icon: Icons.bar_chart_rounded, label: 'Estadísticas al final'),
               ],
             ).animate().fadeIn(delay: 350.ms),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildModeSelector() {
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(30),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildModeOption('Amable', Icons.sentiment_satisfied_alt_rounded, Colors.greenAccent),
+          _buildModeOption('Agresivo', Icons.local_fire_department_rounded, Colors.redAccent),
+        ],
+      ),
+    ).animate().fadeIn(delay: 250.ms);
+  }
+
+  Widget _buildModeOption(String mode, IconData icon, Color color) {
+    final isSelected = _selectedMode == mode;
+    return GestureDetector(
+      onTap: () => setState(() => _selectedMode = mode),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        decoration: BoxDecoration(
+          color: isSelected ? color.withValues(alpha: 0.2) : Colors.transparent,
+          borderRadius: BorderRadius.circular(26),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, size: 16, color: isSelected ? color : Colors.white54),
+            const SizedBox(width: 8),
+            Text(
+              mode,
+              style: GoogleFonts.lato(
+                color: isSelected ? color : Colors.white54,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+              ),
+            ),
           ],
         ),
       ),
@@ -381,7 +435,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   Widget _buildChatView() {
     return Container(
-      color: const Color(0xFFF1F5F9),
+      color: Colors.white,
       child: ListView.builder(
         controller: _scrollCtrl,
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
@@ -395,27 +449,42 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildTypingIndicator() {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(18), topRight: Radius.circular(18), bottomRight: Radius.circular(18),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Container(
+            margin: const EdgeInsets.only(right: 8),
+            child: CircleAvatar(
+              radius: 14,
+              backgroundColor: AppTheme.primaryColor.withValues(alpha: 0.1),
+              child: const Icon(Icons.smart_toy_rounded, size: 16, color: AppTheme.primaryColor),
+            ),
           ),
-          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 8)],
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: List.generate(3, (i) => Container(
-            margin: const EdgeInsets.symmetric(horizontal: 2),
-            width: 6, height: 6,
-            decoration: const BoxDecoration(shape: BoxShape.circle, color: AppTheme.primaryColor),
-          ).animate(onPlay: (c) => c.repeat(reverse: true))
-           .scaleXY(begin: 0.5, end: 1.0, delay: (i * 200).ms, duration: 400.ms, curve: Curves.easeInOut)),
-        ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            decoration: const BoxDecoration(
+              color: Color(0xFFE5E5EA),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+                bottomLeft: Radius.circular(4),
+                bottomRight: Radius.circular(20),
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: List.generate(3, (i) => Container(
+                margin: const EdgeInsets.symmetric(horizontal: 2),
+                width: 6, height: 6,
+                decoration: const BoxDecoration(shape: BoxShape.circle, color: Color(0xFF8E8E93)),
+              ).animate(onPlay: (c) => c.repeat())
+               .scaleXY(begin: 0.8, end: 1.2, delay: (i * 200).ms, duration: 600.ms, curve: Curves.easeInOut)
+               .fade(begin: 0.5, end: 1, delay: (i * 200).ms, duration: 600.ms)),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -427,62 +496,52 @@ class _HomeScreenState extends State<HomeScreen> {
           margin: const EdgeInsets.symmetric(vertical: 6),
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
           decoration: BoxDecoration(color: Colors.orange.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(20)),
-          child: Text(msg.text, style: GoogleFonts.lato(color: Colors.orange.shade800, fontSize: 12)),
+          child: Text(msg.text, style: GoogleFonts.inter(color: Colors.orange.shade800, fontSize: 12)),
         ),
       );
     }
     final isUser = msg.role == _Role.user;
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.only(bottom: 8),
       child: Row(
         mainAxisAlignment: isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           if (!isUser) ...[
-            const CircleAvatar(
-              radius: 16,
-              backgroundColor: AppTheme.primaryColor,
-              child: Icon(Icons.smart_toy_rounded, size: 16, color: Colors.white),
+            Container(
+              margin: const EdgeInsets.only(right: 8),
+              child: CircleAvatar(
+                radius: 14,
+                backgroundColor: AppTheme.primaryColor.withValues(alpha: 0.1),
+                child: const Icon(Icons.smart_toy_rounded, size: 16, color: AppTheme.primaryColor),
+              ),
             ),
-            const SizedBox(width: 8),
           ],
           Flexible(
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.72),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
               decoration: BoxDecoration(
-                gradient: isUser
-                    ? const LinearGradient(colors: [AppTheme.primaryColor, Color(0xFF1E3A5F)])
-                    : null,
-                color: isUser ? null : Colors.white,
+                color: isUser ? const Color(0xFF007AFF) : const Color(0xFFE5E5EA),
                 borderRadius: BorderRadius.only(
-                  topLeft: const Radius.circular(18),
-                  topRight: const Radius.circular(18),
-                  bottomLeft: isUser ? const Radius.circular(18) : Radius.zero,
-                  bottomRight: isUser ? Radius.zero : const Radius.circular(18),
+                  topLeft: const Radius.circular(20),
+                  topRight: const Radius.circular(20),
+                  bottomLeft: Radius.circular(isUser ? 20 : 4),
+                  bottomRight: Radius.circular(isUser ? 4 : 20),
                 ),
-                boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 8, offset: const Offset(0, 3))],
               ),
               child: Text(
                 msg.text,
-                style: GoogleFonts.lato(
+                style: GoogleFonts.inter(
                   color: isUser ? Colors.white : Colors.black87,
-                  fontSize: 14, height: 1.5,
+                  fontSize: 15, height: 1.4,
                 ),
               ),
             ),
           ),
-          if (isUser) ...[
-            const SizedBox(width: 8),
-            const CircleAvatar(
-              radius: 16,
-              backgroundColor: AppTheme.secondaryColor,
-              child: Icon(Icons.person, size: 16, color: Colors.white),
-            ),
-          ],
         ],
       ),
-    ).animate().fadeIn(duration: 250.ms).slideY(begin: 0.1, end: 0);
+    ).animate().fadeIn(duration: 250.ms).slideY(begin: 0.05, end: 0);
   }
 
   // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -494,109 +553,96 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Container(
       padding: EdgeInsets.only(
-        left: 12, right: 12,
-        top: 10,
-        bottom: MediaQuery.of(context).padding.bottom + 10,
+        left: 16, right: 16,
+        top: 8,
+        bottom: MediaQuery.of(context).padding.bottom + 12,
       ),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 12, offset: Offset(0, -2))],
+      decoration: BoxDecoration(
+        color: const Color(0xFFF2F2F7), // iOS background
+        border: Border(top: BorderSide(color: Colors.grey.withValues(alpha: 0.2), width: 0.5)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Turn counter
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(_maxTurns, (i) => AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                margin: const EdgeInsets.symmetric(horizontal: 3),
-                width: 28, height: 4,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(2),
-                  color: i < _userTurns ? AppTheme.secondaryColor : Colors.grey.shade200,
-                ),
-              )),
+          if (_isRecording)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Text(
+                'Grabando audio... suelta para enviar',
+                style: GoogleFonts.inter(color: Colors.red, fontSize: 13, fontWeight: FontWeight.w600),
+              ).animate(onPlay: (c) => c.repeat(reverse: true)).fadeIn(duration: 500.ms),
             ),
-          ),
           Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              // Voice button (press and hold)
-              GestureDetector(
-                onLongPressStart: (_) => _startRecording(),
-                onLongPressEnd: (_) => _stopRecording(),
-                onLongPressCancel: () => _stopRecording(),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  width: 48, height: 48,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: _isRecording ? Colors.red : AppTheme.primaryColor.withValues(alpha: 0.1),
-                  ),
-                  child: Icon(
-                    _isRecording ? Icons.stop_rounded : Icons.mic_rounded,
-                    color: _isRecording ? Colors.white : AppTheme.primaryColor,
-                    size: 22,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 10),
-              // Text field
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade100,
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(24),
-                    border: Border.all(color: Colors.grey.shade200),
+                    border: Border.all(color: Colors.grey.withValues(alpha: 0.3), width: 0.5),
                   ),
-                  child: TextField(
-                    controller: _textCtrl,
-                    enabled: !_isLoading,
-                    maxLines: 3,
-                    minLines: 1,
-                    decoration: InputDecoration(
-                      hintText: _isRecording
-                          ? 'Escuchando...'
-                          : remaining == 0
-                              ? 'Ãšltima respuesta'
-                              : 'Escribe tu respuesta... ($remaining restantes)',
-                      hintStyle: GoogleFonts.lato(color: Colors.grey.shade400, fontSize: 13),
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
-                    ),
-                    onSubmitted: _handleSubmit,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _textCtrl,
+                          enabled: !_isLoading,
+                          maxLines: 5,
+                          minLines: 1,
+                          style: GoogleFonts.inter(fontSize: 15),
+                          decoration: InputDecoration(
+                            hintText: _isRecording
+                                ? 'Escuchando...'
+                                : remaining == 0
+                                    ? 'Última respuesta'
+                                    : 'Mensaje de texto',
+                            hintStyle: GoogleFonts.inter(color: Colors.grey.shade400, fontSize: 15),
+                            border: InputBorder.none,
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                          ),
+                          onSubmitted: _handleSubmit,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 4, bottom: 4),
+                        child: canSend
+                          ? GestureDetector(
+                              onTap: () => _handleSubmit(_textCtrl.text),
+                              child: Container(
+                                padding: const EdgeInsets.all(6),
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Color(0xFF007AFF),
+                                ),
+                                child: const Icon(Icons.arrow_upward_rounded, color: Colors.white, size: 20),
+                              ).animate().scale(duration: 150.ms),
+                            )
+                          : GestureDetector(
+                              onLongPressStart: (_) => _startRecording(),
+                              onLongPressEnd: (_) => _stopRecording(),
+                              onLongPressCancel: () => _stopRecording(),
+                              child: Container(
+                                padding: const EdgeInsets.all(6),
+                                color: Colors.transparent,
+                                child: Icon(Icons.mic_none_rounded, color: Colors.grey.shade500, size: 26),
+                              ),
+                            ),
+                      ),
+                    ],
                   ),
-                ),
-              ),
-              const SizedBox(width: 10),
-              // Send button
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                width: 48, height: 48,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: canSend
-                      ? const LinearGradient(colors: [AppTheme.secondaryColor, AppTheme.primaryColor])
-                      : null,
-                  color: canSend ? null : Colors.grey.shade200,
-                ),
-                child: IconButton(
-                  icon: Icon(Icons.send_rounded, color: canSend ? Colors.white : Colors.grey.shade400, size: 20),
-                  onPressed: canSend ? () => _handleSubmit(_textCtrl.text) : null,
                 ),
               ),
             ],
           ),
-          if (_isRecording)
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Text(
-                'ðŸ”´ Grabando... suelta para enviar',
-                style: GoogleFonts.lato(color: Colors.red, fontSize: 12, fontWeight: FontWeight.w600),
-              ).animate(onPlay: (c) => c.repeat(reverse: true)).fadeIn(duration: 500.ms),
+          Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Text(
+              '$remaining de $_maxTurns turnos restantes',
+              style: GoogleFonts.inter(color: Colors.grey.shade500, fontSize: 11),
             ),
+          ),
         ],
       ),
     );
@@ -618,16 +664,16 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           children: [
             const SizedBox(height: 16),
-            Text('Â¡Entrevista completada!', style: GoogleFonts.playfairDisplay(fontSize: 22, fontWeight: FontWeight.bold, color: AppTheme.primaryColor)).animate().fadeIn(),
+            Text('¡Entrevista completada!', style: GoogleFonts.playfairDisplay(fontSize: 22, fontWeight: FontWeight.bold, color: AppTheme.primaryColor)).animate().fadeIn(),
             const SizedBox(height: 8),
-            Text('AquÃ­ tienes tu informe de rendimiento', style: GoogleFonts.lato(color: Colors.grey.shade500, fontSize: 13)).animate().fadeIn(delay: 100.ms),
+            Text('Aquí tienes tu informe de rendimiento', style: GoogleFonts.lato(color: Colors.grey.shade500, fontSize: 13)).animate().fadeIn(delay: 100.ms),
             const SizedBox(height: 28),
             // Score cards
             Row(
               children: [
-                Expanded(child: _buildScoreCard('ComunicaciÃ³n', comm, AppTheme.secondaryColor)),
+                Expanded(child: _buildScoreCard('Comunicación', comm, AppTheme.secondaryColor)),
                 const SizedBox(width: 14),
-                Expanded(child: _buildScoreCard('TÃ©cnico', tech, const Color(0xFF818CF8))),
+                Expanded(child: _buildScoreCard('Técnico', tech, const Color(0xFF818CF8))),
               ],
             ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.2, end: 0),
             const SizedBox(height: 20),

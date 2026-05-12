@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:record/record.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:amarnamovil/features/interview/data/data_sources/gemini_api_client.dart';
@@ -41,9 +41,9 @@ class _InterviewScreenState extends State<InterviewScreen> {
 
   void _initializeInterview() {
     if (_cvText != null) {
-      _sendMessageToAI("Analiza mi CV y hazme la primera pregunta para empezar la entrevista tÃ©cnica.", hidden: true);
+      _sendMessageToAI("Analiza mi CV y hazme la primera pregunta para empezar la entrevista técnica.", hidden: true);
     } else {
-      _sendMessageToAI("Soy un candidato sin CV a mano. Hazme una entrevista tÃ©cnica general sobre desarrollo de software.", hidden: true);
+      _sendMessageToAI("Soy un candidato sin CV a mano. Hazme una entrevista técnica general sobre desarrollo de software.", hidden: true);
     }
   }
 
@@ -100,7 +100,7 @@ class _InterviewScreenState extends State<InterviewScreen> {
       setState(() {
         _messages.add({
           "role": "system",
-          "content": "Error de conexiÃ³n con Amarna: ${e.toString().replaceFirst('Exception: ', '')}",
+          "content": "Error de conexión con Amarna: ${e.toString().replaceFirst('Exception: ', '')}",
           "timestamp": DateTime.now(),
         });
       });
@@ -169,9 +169,9 @@ class _InterviewScreenState extends State<InterviewScreen> {
           children: [
             Text("Entrevista con Amarna", style: GoogleFonts.lato(fontWeight: FontWeight.bold, fontSize: 18)),
             if (_isLoading)
-               Text("Amarna estÃ¡ pensando...", style: GoogleFonts.lato(fontSize: 12, color: AppTheme.secondaryColor))
+               Text("Amarna está pensando...", style: GoogleFonts.lato(fontSize: 12, color: AppTheme.secondaryColor))
             else 
-               Text("En lÃ­nea", style: GoogleFonts.lato(fontSize: 12, color: Colors.green)),
+               Text("En línea", style: GoogleFonts.lato(fontSize: 12, color: Colors.green)),
           ],
         ),
         centerTitle: true,

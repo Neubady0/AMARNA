@@ -1,4 +1,4 @@
-﻿import 'dart:convert';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -50,7 +50,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final hasCv = (_currentUser['cv_path'] ?? '').isNotEmpty;
     final cvContent = (_currentUser['cv_content'] ?? '') as String;
     final hour = DateTime.now().hour;
-    final greeting = hour < 12 ? 'Buenos dÃ­as' : hour < 20 ? 'Buenas tardes' : 'Buenas noches';
+    final greeting = hour < 12 ? 'Buenos días' : hour < 20 ? 'Buenas tardes' : 'Buenas noches';
 
     return Scaffold(
       backgroundColor: AppTheme.backgroundColor,
@@ -121,7 +121,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Tu CurrÃ­culum', style: GoogleFonts.playfairDisplay(fontSize: 20, fontWeight: FontWeight.bold, color: AppTheme.primaryColor)),
+          Text('Tu Currículum', style: GoogleFonts.playfairDisplay(fontSize: 20, fontWeight: FontWeight.bold, color: AppTheme.primaryColor)),
           const SizedBox(height: 12),
           Container(
             width: double.infinity,
@@ -177,8 +177,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Sin CV todavÃ­a', style: GoogleFonts.lato(fontWeight: FontWeight.bold, fontSize: 15)),
-                            Text('Ve a la pestaÃ±a JobMatch para subir el tuyo', style: GoogleFonts.lato(color: Colors.grey.shade500, fontSize: 12)),
+                            Text('Sin CV todavía', style: GoogleFonts.lato(fontWeight: FontWeight.bold, fontSize: 15)),
+                            Text('Ve a la pestaña JobMatch para subir el tuyo', style: GoogleFonts.lato(color: Colors.grey.shade500, fontSize: 12)),
                           ],
                         ),
                       ),
@@ -213,9 +213,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         children: [
           Expanded(child: _statChip('Entrevistas', '$total', Icons.record_voice_over_rounded, AppTheme.secondaryColor, 250)),
           const SizedBox(width: 12),
-          Expanded(child: _statChip('ComunicaciÃ³n', total > 0 ? '$avgComm%' : '--', Icons.chat_rounded, const Color(0xFF8B5CF6), 350)),
+          Expanded(child: _statChip('Comunicación', total > 0 ? '$avgComm%' : '--', Icons.chat_rounded, const Color(0xFF8B5CF6), 350)),
           const SizedBox(width: 12),
-          Expanded(child: _statChip('TÃ©cnico', total > 0 ? '$avgTech%' : '--', Icons.code_rounded, const Color(0xFF14B8A6), 450)),
+          Expanded(child: _statChip('Técnico', total > 0 ? '$avgTech%' : '--', Icons.code_rounded, const Color(0xFF14B8A6), 450)),
         ],
       ),
     );
@@ -247,7 +247,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Ãšltimas Entrevistas', style: GoogleFonts.playfairDisplay(fontSize: 20, fontWeight: FontWeight.bold, color: AppTheme.primaryColor)),
+          Text('Últimas Entrevistas', style: GoogleFonts.playfairDisplay(fontSize: 20, fontWeight: FontWeight.bold, color: AppTheme.primaryColor)),
           const SizedBox(height: 12),
           if (_interviewLogs.isEmpty)
             Container(
@@ -262,9 +262,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 children: [
                   Icon(Icons.history_edu_rounded, size: 48, color: Colors.grey.shade300),
                   const SizedBox(height: 12),
-                  Text('Sin entrevistas aÃºn', style: GoogleFonts.lato(color: Colors.grey.shade400, fontWeight: FontWeight.w600)),
+                  Text('Sin entrevistas aún', style: GoogleFonts.lato(color: Colors.grey.shade400, fontWeight: FontWeight.w600)),
                   const SizedBox(height: 4),
-                  Text('Completa tu primera sesiÃ³n con el Entrenador IA', textAlign: TextAlign.center,
+                  Text('Completa tu primera sesión con el Entrenador IA', textAlign: TextAlign.center,
                       style: GoogleFonts.lato(color: Colors.grey.shade400, fontSize: 12)),
                 ],
               ),
@@ -313,7 +313,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           children: [
                             Text('Entrevista del $dateStr', style: GoogleFonts.lato(fontWeight: FontWeight.bold, fontSize: 14)),
                             if (comm != null && tech != null)
-                              Text('ComunicaciÃ³n: $comm% Â· TÃ©cnico: $tech%', style: GoogleFonts.lato(color: Colors.grey.shade500, fontSize: 12)),
+                              Text('Comunicación: $comm% · Técnico: $tech%', style: GoogleFonts.lato(color: Colors.grey.shade500, fontSize: 12)),
                           ],
                         ),
                       ),

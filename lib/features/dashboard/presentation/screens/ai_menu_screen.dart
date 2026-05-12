@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:amarnamovil/core/theme/app_theme.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -126,8 +126,8 @@ class AiMenuScreen extends StatelessWidget {
                   ),
                   _buildPremiumCard(
                     context,
-                    title: 'MÃ©tricas',
-                    subtitle: 'EstadÃ­sticas globales de tu perfil.',
+                    title: 'Métricas',
+                    subtitle: 'Estadísticas globales de tu perfil.',
                     icon: Icons.insert_chart_outlined,
                     color: Colors.teal.shade400,
                     delay: 500,

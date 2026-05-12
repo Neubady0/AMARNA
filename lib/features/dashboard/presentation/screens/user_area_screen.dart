@@ -1,4 +1,4 @@
-﻿import 'package:amarnamovil/features/jobs/presentation/screens/job_offers_screen.dart';
+import 'package:amarnamovil/features/jobs/presentation/screens/job_offers_screen.dart';
 import 'package:amarnamovil/features/training/presentation/screens/results_screen.dart';
 import 'package:amarnamovil/features/interview/presentation/screens/interview_requests_screen.dart';
 import 'package:amarnamovil/features/training/presentation/screens/training_screen.dart';
@@ -16,7 +16,7 @@ class UserAreaScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppTheme.backgroundColor,
       appBar: AppBar(
-        title: const Text("GestiÃ³n de Carrera"),
+        title: const Text("Gestión de Carrera"),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -33,7 +33,7 @@ class UserAreaScreen extends StatelessWidget {
               ),
             ).animate().fadeIn().moveX(begin: -20, end: 0),
             Text(
-              "Â¿QuÃ© quieres hacer hoy?",
+              "¿Qué quieres hacer hoy?",
               style: GoogleFonts.lato(
                 fontSize: 16,
                 color: Colors.grey.shade600,
@@ -52,7 +52,7 @@ class UserAreaScreen extends StatelessWidget {
                   context,
                   icon: Icons.bar_chart_rounded,
                   title: 'Resultados',
-                  subtitle: 'Mis mÃ©tricas',
+                  subtitle: 'Mis métricas',
                   color: Colors.purple.shade400,
                   onTap: () {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const ResultsScreen()));
@@ -74,7 +74,7 @@ class UserAreaScreen extends StatelessWidget {
                   context,
                   icon: Icons.mark_email_unread_rounded,
                   title: 'Solicitudes',
-                  subtitle: 'Mis envÃ­os',
+                  subtitle: 'Mis envíos',
                   color: Colors.orange.shade400,
                   onTap: () {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const InterviewRequestsScreen()));
@@ -85,7 +85,7 @@ class UserAreaScreen extends StatelessWidget {
                   context,
                   icon: Icons.school_rounded,
                   title: 'Entrenar',
-                  subtitle: 'SimulaciÃ³n IA',
+                  subtitle: 'Simulación IA',
                   color: Colors.teal.shade400,
                   onTap: () {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const TrainingScreen()));

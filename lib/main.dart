@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:amarnamovil/data/local/database_helper.dart';
 import 'package:amarnamovil/features/auth/presentation/screens/login_screen.dart';
 import 'package:amarnamovil/core/theme/app_theme.dart';
@@ -10,7 +10,7 @@ void main() async {
   runApp(const AmarnaApp());
 }
 
-// FunciÃ³n para insertar ofertas de empleo iniciales si la base de datos estÃ¡ vacÃ­a
+// Función para insertar ofertas de empleo iniciales si la base de datos está vacía
 Future<void> _insertInitialData() async {
   final dbHelper = DatabaseHelper();
   final offers = await dbHelper.getAllJobOffers();
@@ -18,20 +18,20 @@ Future<void> _insertInitialData() async {
   if (offers.isEmpty) {
     await dbHelper.saveJobOffer({
       'title': 'Desarrollador Flutter Junior',
-      'description': 'Buscamos un desarrollador Flutter junior apasionado por crear apps mÃ³viles y de escritorio. Experiencia con Dart y Flutter deseable.',
+      'description': 'Buscamos un desarrollador Flutter junior apasionado por crear apps móviles y de escritorio. Experiencia con Dart y Flutter deseable.',
       'requirements': 'Conocimientos de Dart y Flutter, Git, Firebase. Ganas de aprender y trabajar en equipo.',
       'location': 'Remoto',
     });
     await dbHelper.saveJobOffer({
-      'title': 'DiseÃ±ador UX/UI',
-      'description': 'Necesitamos un diseÃ±ador UX/UI creativo para mejorar la experiencia de usuario de nuestras aplicaciones. Portfolio imprescindible.',
-      'requirements': 'Figma, Sketch, Adobe XD. Experiencia en diseÃ±o de interfaces mÃ³viles y web. Conocimientos de usabilidad.',
+      'title': 'Diseñador UX/UI',
+      'description': 'Necesitamos un diseñador UX/UI creativo para mejorar la experiencia de usuario de nuestras aplicaciones. Portfolio imprescindible.',
+      'requirements': 'Figma, Sketch, Adobe XD. Experiencia en diseño de interfaces móviles y web. Conocimientos de usabilidad.',
       'location': 'Barcelona',
     });
     await dbHelper.saveJobOffer({
       'title': 'Especialista en IA y Machine Learning',
-      'description': 'Puesto para experto en IA que nos ayude a desarrollar los mÃ³dulos de evaluaciÃ³n de entrevistas. Experiencia con Python y frameworks de ML.',
-      'requirements': 'Python, TensorFlow, PyTorch. Experiencia en procesamiento de lenguaje natural y visiÃ³n por computador.',
+      'description': 'Puesto para experto en IA que nos ayude a desarrollar los módulos de evaluación de entrevistas. Experiencia con Python y frameworks de ML.',
+      'requirements': 'Python, TensorFlow, PyTorch. Experiencia en procesamiento de lenguaje natural y visión por computador.',
       'location': 'Madrid',
     });
     debugPrint("Ofertas de empleo iniciales insertadas.");

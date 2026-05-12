@@ -1,4 +1,4 @@
-﻿import 'dart:io';
+import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
@@ -8,6 +8,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:amarnamovil/data/local/database_helper.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:amarnamovil/features/jobs/presentation/screens/job_match_detail_screen.dart';
 
 class JobMatchScreen extends StatefulWidget {
   final Map<String, dynamic> user;
@@ -52,7 +53,7 @@ class _JobMatchScreenState extends State<JobMatchScreen> {
     if (_cameras.isEmpty) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('No se encontrÃ³ ninguna cÃ¡mara')),
+          const SnackBar(content: Text('No se encontró ninguna cámara')),
         );
       }
       return;
@@ -214,7 +215,7 @@ class _JobMatchScreenState extends State<JobMatchScreen> {
                     ),
                     const SizedBox(width: 16),
                     Text(
-                      'FotografÃ­a tu CV',
+                      'Fotografía tu CV',
                       style: GoogleFonts.playfairDisplay(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   ],
@@ -363,7 +364,7 @@ class _JobMatchScreenState extends State<JobMatchScreen> {
           ).animate().fadeIn(delay: 80.ms),
           const SizedBox(height: 6),
           Text(
-            'Sube tu currÃ­culum y descubre quÃ© ofertas encajan con tu perfil.',
+            'Sube tu currículum y descubre qué ofertas encajan con tu perfil.',
             style: GoogleFonts.lato(color: Colors.white60, fontSize: 13, height: 1.5),
           ).animate().fadeIn(delay: 140.ms),
           const SizedBox(height: 24),
@@ -384,7 +385,7 @@ class _JobMatchScreenState extends State<JobMatchScreen> {
               Expanded(
                 child: _buildUploadButton(
                   icon: Icons.camera_alt_rounded,
-                  label: 'Usar cÃ¡mara',
+                  label: 'Usar cámara',
                   sublabel: 'Fotografiar CV',
                   color: const Color(0xFF818CF8),
                   onTap: _isLoading ? null : _openCamera,
@@ -486,7 +487,7 @@ class _JobMatchScreenState extends State<JobMatchScreen> {
           const SizedBox(height: 24),
           Text('Analizando tu CV...', style: GoogleFonts.playfairDisplay(color: AppTheme.primaryColor, fontSize: 18, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
-          Text('Nuestra IA estÃ¡ buscando los mejores matches', style: GoogleFonts.lato(color: Colors.grey.shade500, fontSize: 13)),
+          Text('Nuestra IA está buscando los mejores matches', style: GoogleFonts.lato(color: Colors.grey.shade500, fontSize: 13)),
         ],
       ).animate().fadeIn(),
     );
@@ -521,7 +522,7 @@ class _JobMatchScreenState extends State<JobMatchScreen> {
               ),
             ).animate().fadeIn(),
             const SizedBox(height: 20),
-            Text('Contenido extraÃ­do', style: GoogleFonts.playfairDisplay(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.primaryColor)).animate().fadeIn(delay: 100.ms),
+            Text('Contenido extraído', style: GoogleFonts.playfairDisplay(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.primaryColor)).animate().fadeIn(delay: 100.ms),
             const SizedBox(height: 12),
             Container(
               width: double.infinity,
@@ -556,10 +557,10 @@ class _JobMatchScreenState extends State<JobMatchScreen> {
               child: Icon(Icons.work_history_outlined, size: 50, color: Colors.grey.shade300),
             ).animate().scale(delay: 100.ms, duration: 500.ms, curve: Curves.elasticOut),
             const SizedBox(height: 24),
-            Text('Sin resultados aÃºn', style: GoogleFonts.playfairDisplay(color: Colors.grey.shade400, fontSize: 20, fontWeight: FontWeight.bold)).animate().fadeIn(delay: 200.ms),
+            Text('Sin resultados aún', style: GoogleFonts.playfairDisplay(color: Colors.grey.shade400, fontSize: 20, fontWeight: FontWeight.bold)).animate().fadeIn(delay: 200.ms),
             const SizedBox(height: 10),
             Text(
-              'Sube un PDF, una imagen de tu CV\no usa la cÃ¡mara para fotografiarlo.',
+              'Sube un PDF, una imagen de tu CV\no usa la cámara para fotografiarlo.',
               textAlign: TextAlign.center,
               style: GoogleFonts.lato(color: Colors.grey.shade400, fontSize: 14, height: 1.6),
             ).animate().fadeIn(delay: 300.ms),
@@ -675,7 +676,7 @@ class _JobMatchScreenState extends State<JobMatchScreen> {
                     children: [
                       Icon(Icons.auto_awesome, size: 16, color: Colors.amber.shade600),
                       const SizedBox(width: 8),
-                      Text('Â¿Por quÃ© encajas?', style: GoogleFonts.lato(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.black87)),
+                      Text('¿Por qué encajas?', style: GoogleFonts.lato(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.black87)),
                     ],
                   ),
                   const SizedBox(height: 8),
@@ -684,7 +685,14 @@ class _JobMatchScreenState extends State<JobMatchScreen> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => JobMatchDetailScreen(result: result),
+                          ),
+                        );
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: matchColor.withValues(alpha: 0.08),
                         foregroundColor: matchColor,

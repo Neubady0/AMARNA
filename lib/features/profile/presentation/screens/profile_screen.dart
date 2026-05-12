@@ -214,7 +214,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   _buildProfileTile(
                     icon: Icons.edit_note_rounded,
                     title: 'Datos Personales',
-                    subtitle: 'Modifica tus datos profesionales y acadÃ©micos',
+                    subtitle: 'Modifica tus datos profesionales y académicos',
                     color: Colors.blueAccent,
                     onTap: _navigateToEditProfile,
                     delay: 200,
@@ -253,7 +253,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Navigator.popUntil(context, (route) => route.isFirst);
                       },
                       icon: const Icon(Icons.logout, color: Colors.redAccent), 
-                      label: const Text("Cerrar SesiÃ³n", style: TextStyle(color: Colors.redAccent)),
+                      label: const Text("Cerrar Sesión", style: TextStyle(color: Colors.redAccent)),
                       style: OutlinedButton.styleFrom(
                         side: BorderSide(color: Colors.redAccent.withValues(alpha: 0.5)),
                         padding: const EdgeInsets.symmetric(vertical: 16),
@@ -299,7 +299,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         const Padding(
           padding: EdgeInsets.only(left: 8.0, bottom: 8),
           child: Text(
-            "Tu CurrÃ­culum",
+            "Tu Currículum",
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
           ),
         ),
